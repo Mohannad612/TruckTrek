@@ -9,28 +9,29 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 db = SQLAlchemy()
 bcrypt = Bcrypt(app)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'SecureHome'
-
 db.init_app(app)
 
-# Initialize the database
-with app.app_context():
-    db.create_all()
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[
@@ -48,6 +49,7 @@ class RegisterForm(FlaskForm):
             raise ValidationError(
                 'That username already exists. Please choose a different one.')
 
+
 class LoginForm(FlaskForm):
     username = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -57,9 +59,11 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -72,16 +76,19 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
+
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
 
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -96,5 +103,7 @@ def register():
 
     return render_template('register.html', form=form)
 
+
 if __name__ == "__main__":
     app.run(debug=True)
+    
