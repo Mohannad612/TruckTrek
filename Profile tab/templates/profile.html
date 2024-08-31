@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,10 +10,12 @@
     <div class="container">
         <h1>Create Profile</h1>
         <form method="POST" enctype="multipart/form-data">
-
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
             <label for="age">Age:</label>
             <input type="number" id="age" name="age" required>
-
+            
             <label for="year">University Year:</label>
             <select id="year" name="year" required>
                 <option value="Foundation">Foundation</option>
@@ -39,7 +40,7 @@
                 <option value="FIST">Faculty of Information Science & Technology (FIST)</option>
             </select>
 
-            <label for="tags">Tags:</label>
+            <label for="tags">Tags(Comma Seperated e.g:badminton,gamer):</label>
             <input type="text" id="tags" name="tags" required>
 
             <label for="photos">Upload Photos (3-5):</label>
