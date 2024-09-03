@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Likes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Likes</h1>
+        <div class="likes-section">
+            <h2>Profiles You Liked</h2>
+            <div class="profile-cards">
+                {% for like in liked_profiles %}
+                    <div class="profile-card">
+                        <img src="{{ url_for('static', filename=like.liked_profile.image1) }}" alt="Profile Image">
+                        <p>{{ like.liked_profile.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="likes-section">
+            <h2>Profiles That Liked You</h2>
+            <div class="profile-cards">
+                {% for like in profiles_liked_you %}
+                    <div class="profile-card">
+                        <img src="{{ url_for('static', filename=like.liked_profile.image1) }}" alt="Profile Image">
+                        <p>{{ like.liked_profile.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

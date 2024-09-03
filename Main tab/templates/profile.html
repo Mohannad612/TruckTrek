@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+            
+            <label for="year">University Year:</label>
+            <select id="year" name="year" required>
+                <option value="Foundation">Foundation</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Degree Year 1">Degree Year 1</option>
+                <option value="Degree Year 2">Degree Year 2</option>
+                <option value="Degree Year 3">Degree Year 3</option>
+                <option value="Degree Year 4">Degree Year 4</option>
+            </select>
+
+            <label for="description">Description (200 words max):</label>
+            <textarea id="description" name="description" maxlength="200" required></textarea>
+
+            <label for="faculty">Faculty:</label>
+            <select id="faculty" name="faculty" required>
+                <option value="FCI">Faculty of Computing & Informatics (FCI)</option>
+                <option value="FOE">Faculty of Engineering (FOE)</option>
+                <option value="FCM">Faculty of Creative Multimedia (FCM)</option>
+                <option value="FOM">Faculty of Management (FOM)</option>
+                <option value="FET">Faculty of Engineering & Technology (FET)</option>
+                <option value="FOL">Faculty of Law (FOL)</option>
+                <option value="FIST">Faculty of Information Science & Technology (FIST)</option>
+            </select>
+
+            <label for="tags">Tags(Comma Seperated e.g:badminton,gamer):</label>
+            <input type="text" id="tags" name="tags" required>
+
+            <label for="photos">Upload Photos (3-5):</label>
+            <input type="file" id="photos" name="photos" multiple required>
+
+            <button type="submit">Save Profile</button>
+        </form>
+        <ul class="flashes">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </ul>
+    </div>
+</body>
+</html>
