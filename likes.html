@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Likes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Likes</h1>
+    
+    <!-- Buttons to toggle between 'sent' and 'received' likes -->
+    <nav>
+        <a href="{{ url_for('likes', view='sent') }}" {% if view == 'sent' %}style="font-weight: bold;"{% endif %}>
+            Likes Sent
+        </a>
+        |
+        <a href="{{ url_for('likes', view='received') }}" {% if view == 'received' %}style="font-weight: bold;"{% endif %}>
+            Likes Received
+        </a>
+    </nav>
+
+    <!-- Display Sent Likes if 'sent' is selected -->
+    {% if view == 'sent' %}
+        <h2>Profiles You've Liked</h2>
+        <ul>
+            {% for like in sent_likes %}
+                <li>
+                    <p>Name: {{ like.liked_profile.name }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+    <!-- Display Received Likes if 'received' is selected -->
+    {% elif view == 'received' %}
+        <h2>Profiles Who Liked You</h2>
+        <ul>
+            {% for like in received_likes %}
+                <li>
+                    <p>{{ like.liker.username }} liked your profile</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
