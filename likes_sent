@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Likes Sent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Profiles You've Liked</h1>
+    <ul>
+        {% for like in liked_profiles %}
+            <li>
+                <p>Name: {{ like.liked_profile.name }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
