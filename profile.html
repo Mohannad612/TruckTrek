@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ profile.name }}" required>
+            
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" value="{{ profile.age }}" required>
+            
+            <label for="year">University Year:</label>
+            <select id="year" name="year" required>
+                <option value="Foundation" {% if profile.year == 'Foundation' %}selected{% endif %}>Foundation</option>
+                <option value="Diploma" {% if profile.year == 'Diploma' %}selected{% endif %}>Diploma</option>
+                <option value="Degree Year 1" {% if profile.year == 'Degree Year 1' %}selected{% endif %}>Degree Year 1</option>
+                <option value="Degree Year 2" {% if profile.year == 'Degree Year 2' %}selected{% endif %}>Degree Year 2</option>
+                <option value="Degree Year 3" {% if profile.year == 'Degree Year 3' %}selected{% endif %}>Degree Year 3</option>
+                <option value="Degree Year 4" {% if profile.year == 'Degree Year 4' %}selected{% endif %}>Degree Year 4</option>
+            </select>
+
+            <label for="description">Description (200 words max):</label>
+            <textarea id="description" name="description" maxlength="200" required>{{ profile.description }}</textarea>
+
+            <label for="faculty">Faculty:</label>
+            <select id="faculty" name="faculty" required>
+                <option value="FCI" {% if profile.faculty == 'FCI' %}selected{% endif %}>Faculty of Computing & Informatics (FCI)</option>
+                <option value="FOE" {% if profile.faculty == 'FOE' %}selected{% endif %}>Faculty of Engineering (FOE)</option>
+                <option value="FCM" {% if profile.faculty == 'FCM' %}selected{% endif %}>Faculty of Creative Multimedia (FCM)</option>
+                <option value="FOM" {% if profile.faculty == 'FOM' %}selected{% endif %}>Faculty of Management (FOM)</option>
+                <option value="FET" {% if profile.faculty == 'FET' %}selected{% endif %}>Faculty of Engineering & Technology (FET)</option>
+                <option value="FOL" {% if profile.faculty == 'FOL' %}selected{% endif %}>Faculty of Law (FOL)</option>
+                <option value="FIST" {% if profile.faculty == 'FIST' %}selected{% endif %}>Faculty of Information Science & Technology (FIST)</option>
+            </select>
+
+            <label for="tags">Tags (Comma Separated e.g: badminton,gamer):</label>
+            <input type="text" id="tags" name="tags" value="{{ profile.tags }}" required>
+
+            <label for="photos">Upload Photos (3-5):</label>
+            <input type="file" id="photos" name="photos" multiple>
+
+            <button type="submit">Save Profile</button>
+        </form>
+
+        <h2>Profile Photos:</h2>
+        {% for i in range(1, 6) %}
+            {% set image_field = 'image' ~ i %}
+            {% if profile[image_field] %}
+                <div>
+                    <img src="{{ url_for('static', filename='uploads/user_' ~ profile.id ~ '/' ~ profile[image_field]) }}" alt="Profile Image {{ i }}" style="max-width: 200px; max-height: 200px;">
+                </div>
+            {% else %}
+                <div>
+                    Profile Image {{ i }}: No image uploaded.
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <ul class="flashes">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </ul>
+    </div>
+</body>
+</html>
