@@ -51,20 +51,17 @@
 
         <h2>Profile Photos:</h2>
         {% for i in range(1, 6) %}
-        {% set base_path = 'uploads/user_' ~ profile.id ~ '/user_' ~ profile.id ~ '_photo_' ~ i %}
-        <div>
-            <img src="{{ url_for('static', filename=base_path ~ '.jpeg') }}"
-                 onerror="this.onerror=null;this.src='{{ url_for('static', filename=base_path ~ '.jpg') }}';"
-                 onerror="this.onerror=null;this.src='{{ url_for('static', filename=base_path ~ '.png') }}';"
-                 onerror="this.onerror=null;this.src='{{ url_for('static', filename=base_path ~ '.gif') }}';"
-                 alt="Profile Image {{ i }}" style="max-width: 200px; max-height: 200px;">
-        </div>
-    {% else %}
-        <div>
-            Profile Image {{ i }}: No image uploaded.
-        </div>
-    {% endfor %}
-    
+            {% set image_field = 'image' ~ i %}
+            {% if profile[image_field] %}
+                <div class="profile-image-label">
+                    <img src="{{ url_for('static', filename='uploads/user_' ~ profile.id ~ '/' ~ profile[image_field]) }}" alt="Profile Image {{ i }}" style="max-width: 200px; max-height: 200px;">
+                </div>
+            {% else %}
+                <div class="profile-image-label">
+                    Profile Image {{ i }}: No image uploaded.
+                </div>
+            {% endif %}
+        {% endfor %}        
 
         <ul class="flashes">
             {% with messages = get_flashed_messages() %}

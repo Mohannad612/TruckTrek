@@ -142,54 +142,79 @@ def profile():
         tags = request.form['tags']
         photos = request.files.getlist('photos')
 
-        # Only require new photo uploads if no existing ones are present
+        # Check if profile exists
         if profile:
             existing_photos = [profile.image1, profile.image2, profile.image3, profile.image4, profile.image5]
-        else:
-            existing_photos = []
-
-        if len(photos) < 3 and len([photo for photo in existing_photos if photo]) < 3:
-            flash('You must have at least 3 photos.')
-            return redirect(url_for('profile'))
-
-        if len(photos) > 5:
-            flash('You can upload a maximum of 5 photos.')
-            return redirect(url_for('profile'))
-
-        # Update profile details
-        if profile:
+            
+            # Update profile details
             profile.name = name
             profile.age = age
             profile.year = year
             profile.description = description
             profile.faculty = faculty
             profile.tags = tags
+
+            # Handle photo uploads
+            if len(photos) > 0:  # Only check for photo upload requirement if photos are included
+                if len(photos) < 3 and len([photo for photo in existing_photos if photo]) < 3:
+                    flash('You must have at least 3 photos.')
+                    return redirect(url_for('profile'))
+
+                if len(photos) > 5:
+                    flash('You can upload a maximum of 5 photos.')
+                    return redirect(url_for('profile'))
+
+                # Save the uploaded images
+                user_folder = os.path.join(app.config['UPLOAD_FOLDER'], f"user_{profile.id}")
+                os.makedirs(user_folder, exist_ok=True)
+
+                for i in range(min(len(photos), 5)):
+                    if allowed_file(photos[i].filename):
+                        filename = secure_filename(f"user_{profile.id}_photo_{i+1}.{photos[i].filename.rsplit('.', 1)[1].lower()}")
+                        photo_path = os.path.join(user_folder, filename)
+                        photos[i].save(photo_path)
+                        setattr(profile, f'image{i+1}', filename)  # Update image fields dynamically
+
+                # Retain old images if new ones are not uploaded
+                for i in range(1, 6):
+                    if not getattr(profile, f'image{i}') and len(existing_photos) >= i and existing_photos[i - 1]:
+                        setattr(profile, f'image{i}', existing_photos[i - 1])
+            else:
+                # If no new photos are uploaded, retain existing ones
+                for i in range(1, 6):
+                    if not getattr(profile, f'image{i}') and len(existing_photos) >= i and existing_photos[i - 1]:
+                        setattr(profile, f'image{i}', existing_photos[i - 1])
+
         else:
+            # Create new profile if it does not exist
             profile = UserProfile(
-                id=current_user.id, name=name, age=age, year=year, 
+                id=current_user.id, name=name, age=age, year=year,
                 description=description, faculty=faculty, tags=tags
             )
             db.session.add(profile)
 
-        # Save the uploaded images
-        user_folder = os.path.join(app.config['UPLOAD_FOLDER'], f"user_{profile.id}")
-        os.makedirs(user_folder, exist_ok=True)
+            # Handle photo uploads for new profile
+            if len(photos) < 3:
+                flash('You must upload at least 3 photos.')
+                return redirect(url_for('profile'))
 
-        for i in range(min(len(photos), 5)):
-            if allowed_file(photos[i].filename):
-                filename = secure_filename(f"user_{profile.id}_photo_{i+1}.{photos[i].filename.rsplit('.', 1)[1].lower()}")
-                photo_path = os.path.join(user_folder, filename)
-                photos[i].save(photo_path)
-                setattr(profile, f'image{i+1}', photo_path)  # Update image fields dynamically
+            if len(photos) > 5:
+                flash('You can upload a maximum of 5 photos.')
+                return redirect(url_for('profile'))
 
-        # Retain old images if new ones are not uploaded
-        for i in range(1, 6):
-            if not getattr(profile, f'image{i}') and len(existing_photos) >= i and existing_photos[i - 1]:
-                setattr(profile, f'image{i}', existing_photos[i - 1])
+            user_folder = os.path.join(app.config['UPLOAD_FOLDER'], f"user_{profile.id}")
+            os.makedirs(user_folder, exist_ok=True)
+
+            for i in range(min(len(photos), 5)):
+                if allowed_file(photos[i].filename):
+                    filename = secure_filename(f"user_{profile.id}_photo_{i+1}.{photos[i].filename.rsplit('.', 1)[1].lower()}")
+                    photo_path = os.path.join(user_folder, filename)
+                    photos[i].save(photo_path)
+                    setattr(profile, f'image{i+1}', filename)  # Save just the filename
 
         db.session.commit()
         flash('Profile updated successfully.')
-        return redirect(url_for('home'))
+        return redirect(url_for('profile'))
 
     return render_template('profile.html', profile=profile)
 
