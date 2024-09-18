@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Likes Received</title>
+</head>
+<body>
+    <h1>Profiles Who Liked You</h1>
+    <ul>
+        {% for like in received_likes %}
+            <li>
+                <p>{{ like.liker.username }} liked your profile</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
