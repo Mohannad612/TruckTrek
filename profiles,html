@@ -5,36 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profiles</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #9a0dad;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        .main-buttons {
+            display: flex;
+            justify-content: center;
+            background-color: #6a0dad;
+            padding: 10px 0;
+        }
+        .main-buttons .btn {
+            color: white;
+            background-color: #6a0dad;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin: 0 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .main-buttons .btn:hover {
+            background-color: #9b30ff;
+        }
+        .content {
+            padding: 20px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            flex: 1;
+        }
+        .content h2 {
+            color: #6a0dad;
+            margin-bottom: 20px;
+        }
+        .content p {
+            color: #333;
+        }
+        .content button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .content button:hover {
+            background-color: #0056b3;
+        }
+        .content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .profile {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .profile h2 {
+            color: #6a0dad;
+        }
+        .profile p {
+            color: #333;
+        }
+        .profile ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .profile ul li {
+            margin: 5px 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .profile img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Find Your Match</h1>
-    <form action="{{ url_for('profiles') }}" method="POST">
-        {% if profiles %}
-            {% for profile in profiles %}
-            <div class="profile">
-                <h2>{{ profile.name }}</h2>
-                <p>Images:</p>
-                <p>Age: {{ profile.age }}</p>
-                <p>Year: {{ profile.year }}</p>
-                <p>Description: {{ profile.description }}</p>
-                <p>Faculty: {{ profile.faculty }}</p>
-                <p>Tags: {{ profile.tags }}</p>
-                <ul>
-                    {% if profile.image1 %}
-                    <li><img src="{{ url_for('static', filename=profile.image1.split('/')[-1]) }}" alt="Image 1" width="100"></li>
-                    {% endif %}
-                    {% if profile.image2 %}
-                    <li><img src="{{ url_for('static', filename=profile.image2.split('/')[-1]) }}" alt="Image 2" width="100"></li>
-                    {% endif %}
-                </ul>
-                <button type="submit" name="action" value="like">Like</button>
-                <button type="submit" name="action" value="pass">Pass</button>
-                <input type="hidden" name="profile_id" value="{{ profile.id }}">
-            </div>
-            {% endfor %}
-        {% else %}
-            <p>There's no available accounts at the moment. Please try again later.</p>
-        {% endif %}
-    </form>
+    <div class="container">
+        <div class="header">
+            <h1>Find Your Match</h1>
+        </div>
+        <div class="main-buttons">
+            <a class="btn">Profile</a>
+            <a href="{{ url_for('profiles') }}" class="btn">People</a>
+            <a href="{{ url_for('likes') }}" class="btn">Likes</a>
+            <a class="btn">Chat</a>
+            <a href="{{ url_for('home') }}" class="btn">Home Page</a>
+        </div>
+        <div class="content">
+            <form action="{{ url_for('profiles') }}" method="POST">
+                {% if profile %}
+                    <div class="profile">
+                        <h2>{{ profile.name }}</h2>
+                        <p>Age: {{ profile.age }}</p>
+                        <p>Year: {{ profile.year }}</p>
+                        <p>Description: {{ profile.description }}</p>
+                        <p>Faculty: {{ profile.faculty }}</p>
+                        <p>Tags: {{ profile.tags }}</p>
+                        <ul>
+                            {% if profile.image1 %}
+                            <li><img src="{{ url_for('static', filename='uploads/' + profile.image1.split('/')[-1]) }}" alt="Image 1"></li>
+                            {% endif %}
+                            {% if profile.image2 %}
+                            <li><img src="{{ url_for('static', filename='uploads/' + profile.image2.split('/')[-1]) }}" alt="Image 2"></li>
+                            {% endif %}
+                        </ul>
+                        <button type="submit" name="action" value="like">Like</button>
+                        <button type="submit" name="action" value="pass">Pass</button>
+                        <input type="hidden" name="profile_id" value="{{ profile.id }}">
+                    </div>
+                {% else %}
+                    <p>No more profiles available. Please try again later.</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 </body>
 </html>
