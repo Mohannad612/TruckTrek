@@ -5,42 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Likes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #9a0dad;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        .main-buttons {
+            display: flex;
+            justify-content: center;
+            background-color: #6a0dad;
+            padding: 10px 0;
+        }
+        .main-buttons .btn {
+            color: white;
+            background-color: #6a0dad;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin: 0 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .main-buttons .btn:hover {
+            background-color: #0056b3;
+        }
+        .content {
+            padding: 20px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            flex: 1;
+        }
+        .content h2 {
+            color: #6a0dad;
+            margin-bottom: 20px;
+        }
+        .content p {
+            color: #333;
+        }
+        .content a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .content a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        nav {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: normal;
+            margin: 0 10px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .content ul li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-    <h1>Likes</h1>
-    
-    <!-- Buttons to toggle between 'sent' and 'received' likes -->
-    <nav>
-        <a href="{{ url_for('likes', view='sent') }}" {% if view == 'sent' %}style="font-weight: bold;"{% endif %}>
-            Likes Sent
-        </a>
-        |
-        <a href="{{ url_for('likes', view='received') }}" {% if view == 'received' %}style="font-weight: bold;"{% endif %}>
-            Likes Received
-        </a>
-    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>Likes</h1>
+        </div>
+        <div class="main-buttons">
+            <a class="btn">Profile</a>
+            <a href="{{ url_for('profiles') }}" class="btn">People</a>
+            <a href="{{ url_for('likes') }}" class="btn">Likes</a>
+            <a class="btn">Chat</a>
+            <a href="{{ url_for('home') }}" class="btn">Home Page</a>
+        <div class="content">
+            <nav>
+                <a href="{{ url_for('likes', view='sent') }}" {% if view == 'sent' %}style="font-weight: bold;"{% endif %}>
+                    Likes Sent
+                </a>
+                |
+                <a href="{{ url_for('likes', view='received') }}" {% if view == 'received' %}style="font-weight: bold;"{% endif %}>
+                    Likes Received
+                </a>
+            </nav>
 
-    <!-- Display Sent Likes if 'sent' is selected -->
-    {% if view == 'sent' %}
-        <h2>Profiles You've Liked</h2>
-        <ul>
-            {% for like in sent_likes %}
-                <li>
-                    <p>Name: {{ like.liked_profile.name }}</p>
-                </li>
-            {% endfor %}
-        </ul>
+            <h2>Matches</h2>
+            <ul>
+                {% if matches %}
+                    {% for match in matches %}
+                        <li>
+                            <p>Matched with {{ match.name }}</p>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li><p>No matches found yet.</p></li>
+                {% endif %}
+            </ul>
 
-    <!-- Display Received Likes if 'received' is selected -->
-    {% elif view == 'received' %}
-        <h2>Profiles Who Liked You</h2>
-        <ul>
-            {% for like in received_likes %}
-                <li>
-                    <p>{{ like.liker.username }} liked your profile</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+            {% if view == 'sent' %}
+                <h2>Profiles You've Liked</h2>
+                <ul>
+                    {% for like in sent_likes %}
+                        <li>
+                            <p>Name: {{ like.liked_profile.name }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% elif view == 'received' %}
+                <h2>Profiles Who Liked You</h2>
+                <ul>
+                    {% for like in received_likes %}
+                        <li>
+                            <p>{{ like.liker.username }} liked your profile</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>
