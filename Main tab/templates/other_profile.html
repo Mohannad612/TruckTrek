@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .profile-container {
+      display: flex;
+      flex-direction: row;
+      align-items: start;
+      width: 90vw;
+      height: 90vh;
+      padding: 20px;
+      border-radius: 12px;
+      background-color: rgb(24, 24, 27);
+      gap: 20px;
+    }
+
+    .profile-sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      width: 20vw;
+      height: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      background-color: rgb(17, 17, 19);
+      gap: 20px;
+    }
+
+    .sidebar-button {
+      padding: 10px;
+      width: 100%;
+      border-radius: 10px;
+      background-color: rgb(17, 17, 19);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .sidebar-button:hover {
+      background-color: rgb(39, 39, 42);
+    }
+
+    .sidebar-button.active {
+      background-color: rgb(57, 57, 57);
+    }
+
+    .profile-main {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      background-color: rgb(24, 24, 27);
+      gap: 20px;
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    .profile-title {
+      color: white;
+      padding-bottom: 20px;
+      font-size: 30px;
+    }
+
+    .profile-info {
+      color: white;
+      font-size: 18px;
+      display: flex;
+      flex-direction: row;
+      gap: 50px;
+      width: 100%;
+    }
+
+    .profile-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .profile-info div {
+      margin-bottom: 10px;
+    }
+
+    .name-and-like {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .name-and-like button {
+      padding: 5px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgb(0, 112, 240);
+      color: white;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      background-color: rgb(17, 17, 19);
+      color: white;
+    }
+
+    .upload-description {
+      width: 100%;
+    }
+
+    .btn-primary {
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgb(39, 39, 42);
+      color: white;
+      cursor: pointer;
+    }
+
+    .post {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .post-item {
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 10px;
+      background-color: rgb(17, 17, 19);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .post-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-primary:hover {
+      background-color: rgb(57, 57, 57);
+    }
+
+    .modal-bg {
+      background-color: rgba(0, 0, 0, 0.4);
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      /* background-color: rgba(0, 0, 0, 0.4); */
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s;
+    }
+
+    .modal-content {
+      background-color: rgb(24, 24, 27);
+      margin: auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      animation: zoomIn 0.3s;
+    }
+
+    .close {
+      color: #aaa;
+      align-self: flex-end;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: white;
+      text-decoration: none;
+    }
+
+    .upload-outline {
+      width: 200px;
+      height: 200px;
+      border: 2px dashed #ccc;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .upload-outline::before {
+      content: '+';
+      font-size: 50px;
+      color: #ccc;
+      position: absolute;
+    }
+
+    .upload-outline.image-uploaded {
+      border: none;
+    }
+
+    .upload-outline.image-uploaded::before {
+      display: none;
+    }
+
+    #imagePreview {
+      border-radius: 5px;
+    }
+
+    .upload-outline input[type="file"] {
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      cursor: pointer;
+    }
+
+    .upload-outline img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .upload-outline img.visible {
+      display: block;
+    }
+
+    .upload-outline img.visible+.upload-outline::before {
+      display: none;
+    }
+
+    .post-section {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: rgb(17, 17, 19);
+      border-radius: 10px;
+      overflow-y: auto;
+      padding: 20px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .center-text {
+      color: white;
+      font-size: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .post-details {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .post-details img {
+      max-width: 60%;
+      border-radius: 10px;
+    }
+
+    .post-description {
+      color: white;
+      font-size: 18px;
+      max-width: 40%;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+      }
+
+      to {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes zoomOut {
+      from {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      to {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+    }
+
+    .zoomOut {
+      animation: zoomOut 0.3s;
+    }
+
+    @media (max-width: 600px) {
+      .profile-title {
+        font-size: 24px;
+      }
+
+      .profile-container {
+        width: 90%;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .btn-primary {
+        padding: 15px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body class="profile-page">
+  <div class="profile-container">
+    <div class="profile-sidebar">
+      <div class="brand">
+        <h1 class="dashboard-title">Bondly</h1>
+      </div>
+      <a href="{{ url_for('dashboard') }}"
+        class="sidebar-button {% if request.path == '/dashboard' %}active{% endif %}">People</a>
+      <a href="{{ url_for('chat') }}" class="sidebar-button {% if request.path == '/chat' %}active{% endif %}">Chat</a>
+      <a href="{{ url_for('dashboard') }}"
+        class="sidebar-button {% if request.path == '/notifications' %}active{% endif %}">Notifications</a>
+      <a href="{{ url_for('profile') }}"
+        class="sidebar-button {% if request.path == '/profile' or request.path == '/settings/profile'%}active{% endif %}">Profile</a>
+      <a href="{{ url_for('logout') }}" class="sidebar-button">Logout</a>
+    </div>
+    <div class="profile-main">
+      <div class="profile-info">
+        <div class="pfp-section">
+          <img id="profilePicPreview" src="{{ user.profile_pic }}" alt="Profile Picture"
+            style="width: 150px; height: 150px; border-radius: 50%;">
+        </div>
+        <div class="profile-details">
+          <div class="name-and-like">
+            <p>{{ user.first_name }} {{ user.last_name }}</p>
+            <div class="profile-buttons">
+              <button id="likeBtn">{{ 'Unlike' if liked else 'Like' }}</button>
+            </div>
+          </div>
+          <div>{{ user.description }}</div>
+          <div>{{ user.interests }}</div>
+          <div>{{ user.age }}</div>
+        </div>
+      </div>
+      <div class="post-section">
+        {% if posts %}
+        <div class="post">
+          {% for post in posts %}
+          <div class="post-item" data-description="{{ post.description }}">
+            <img src="data:image/png;base64,{{ post.content }}" alt="Post Image">
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="center-text">
+          <p>No posts to display...</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-bg"></div>
+  <div id="postDetailsModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="post-details">
+        <img id="postDetailsImage" alt="Post Image">
+        <div class="post-description">
+          <p id="postDetailsDescription"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var modalBg = document.getElementsByClassName("modal-bg")[0];
+    var postDetailsModal = document.getElementById("postDetailsModal");
+    var postDetailsImage = document.getElementById("postDetailsImage");
+    var postDetailsDescription = document.getElementById("postDetailsDescription");
+    var postDetailsClose = postDetailsModal.getElementsByClassName("close")[0];
+
+    function openPostDetailsModal(imageSrc, description) {
+      modalBg.style.display = "block";
+      postDetailsImage.src = imageSrc;
+      postDetailsDescription.textContent = description;
+      postDetailsModal.style.display = "flex";
+    }
+
+    postDetailsClose.onclick = function () {
+      postDetailsModal.classList.add("zoomOut");
+      setTimeout(function () {
+        postDetailsModal.style.display = "none";
+        postDetailsModal.classList.remove("zoomOut");
+        modalBg.style.display = "none";
+      }, 300);
+    }
+
+    window.onclick = function (event) {
+      if (event.target == postDetailsModal) {
+        postDetailsModal.classList.add("zoomOut");
+        setTimeout(function () {
+          postDetailsModal.style.display = "none";
+          postDetailsModal.classList.remove("zoomOut");
+          modalBg.style.display = "none";
+        }, 300);
+      }
+    }
+
+    var postItems = document.getElementsByClassName("post-item");
+    for (var i = 0; i < postItems.length; i++) {
+      postItems[i].onclick = function () {
+        var imageSrc = this.getElementsByTagName("img")[0].src;
+        var description = this.getAttribute("data-description");
+        openPostDetailsModal(imageSrc, description);
+      }
+    }
+
+    var likeBtn = document.getElementById("likeBtn");
+    likeBtn.onclick = function () {
+      fetch("{{ url_for('like') }}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "id": "{{ user.id }}"
+        })
+      }).then(response => response.json()).then(data => {
+        if (data.status) {
+          if (data.removed) {
+            likeBtn.textContent = "Like";
+          } else {
+            likeBtn.textContent = "Unlike";
+          }
+        } else {
+          alert("Failed to like/unlike!");
+        }
+      });
+    }
+  </script>
