@@ -1,97 +1,116 @@
-/* Universal styles */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
+
 body {
-    background-color: #f5f5f5;
-    color: #333; /* Ensure text color is consistent across the body */
+    background: black;
+    color: #f5f5f5;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+body.login-page {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
-/* Container styles */
 .container {
-    text-align: center;
-    background-color: #6A0DAD;
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
-}
-
-/* Header styles */
-.header h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #fff; /* Ensure header text color contrasts well with background */
-}
-
-/* Button styles */
-.btn {
-    display: block;
-    background-color: #fff;
-    color: #6A0DAD;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin: 10px 0;
-    font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btn:hover {
-    background-color: #9b30ff;
-    color: #fff;
-}
-
-/* Main container for larger layout */
-.main-container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Heading styles */
-h1, h2 {
-    color: #6a1b9a;
-    text-align: center;
-}
-
-/* Likes section styles */
-.likes-section {
-    margin-bottom: 30px;
-}
-
-/* Profile card styles */
-.profile-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.profile-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.profile-card img {
+    background-color: #1e1e1e;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    max-width: 360px;
     width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
+    text-align: center;
 }
 
-.profile-card p {
-    padding: 10px;
-    color: #333;
+h1 {
+    font-size: 32px;
+    margin-bottom: 24px;
+    color: #f5f5f5;
 }
+/* a {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #ddd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+} */
+
+/* a:hover {
+    color: #fff;
+} */
+
+/* Home page styling */
+/* body.home-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    margin: 0;
+}
+
+.home-container {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #f5f5f5;
+} */
+
+/* a {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin: 10px;
+    display: inline-block;
+}
+
+a:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+a:active {
+    background-color: #004494;
+} */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #333;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
