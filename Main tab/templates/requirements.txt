@@ -1,8 +1,0 @@
-Flask
-itsdangerous
-Flask-SQLAlchemy
-Flask-Login
-Flask-WTF
-WTForms
-Flask-Bcrypt
-Flask-Mail
