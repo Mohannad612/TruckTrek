@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .home-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 300px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(24, 24, 27);
+            gap: 20px;
+        }
+
+        .home-title {
+            color: white;
+            padding-bottom: 20px;
+            font-size: 30px;
+        }
+
+        .home-description {
+            color: white;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgb(0, 112, 240);
+            width: 100%;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px 0 rgba(0, 112, 240, 0.7);
+            font-size: 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .home-title {
+                font-size: 24px;
+            }
+
+            .home-container {
+                width: 90%;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .btn-primary {
+                padding: 15px;
+                font-size: 18px;
+            }
+
+            .home-description {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body class="home-page">
+    <div class="home-container">
+        <h1 class="home-title">Welcome to Bondly</h1>
+        <p class="home-description">Welcome to our authentication system. Please choose an option below:</p>
+        <a href="{{ url_for('auth') }}" class="btn-primary">Login Page</a>
+    </div>
+</body>
+
+</html>

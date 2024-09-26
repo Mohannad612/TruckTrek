@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Auth</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .form-title {
+            color: white;
+            padding-bottom: 20px;
+            font-size: 30px;
+        }
+
+        .form-wrapper {
+            transition: height 0.3s ease;
+            overflow: hidden;
+        }
+
+        .form-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 300px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(24, 24, 27);
+            gap: 20px;
+        }
+
+        .button {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgb(0, 112, 240);
+            width: 100%;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px 0 rgba(0, 112, 240, 0.7);
+            font-size: 20px;
+        }
+
+        .reset {
+            color: white;
+            font-size: 16px;
+        }
+
+        .input-field {
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            background-color: rgb(39, 39, 42);
+            color: white;
+            border: none;
+            outline: none;
+            font-size: 20px;
+            margin-top: 15px;
+        }
+
+        .input-field-label {
+            color: white;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            font-size: 20px;
+        }
+
+        .switch-body {
+            display: flex;
+            padding: 8px;
+            height: 40px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgb(39, 39, 42);
+            width: 100%;
+            position: relative;
+        }
+
+        .switch-body-element {
+            height: 100%;
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+        }
+
+        .switch-body-element.active {
+            color: white;
+        }
+
+        .switch-body::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            bottom: 4px;
+            width: calc(50% - 4px);
+            background-color: rgb(63, 63, 70);
+            border-radius: 7px;
+            transition: transform 0.3s ease;
+            z-index: 0;
+        }
+
+        .switch-body.login-active::before {
+            transform: translateX(0);
+        }
+
+        .switch-body.register-active::before {
+            transform: translateX(100%);
+        }
+
+        .alert-danger {
+            color: #dc3545;
+            align-items: center;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .alert-success {
+            align-items: center;
+            text-align: center;
+            color: #28a745;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-title {
+                font-size: 24px;
+            }
+
+            .form-body {
+                width: 90%;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .button {
+                padding: 15px;
+                font-size: 18px;
+            }
+
+            .input-field {
+                padding: 15px;
+                font-size: 18px;
+            }
+
+            .input-field-label {
+                font-size: 18px;
+            }
+
+            .switch-body {
+                height: 40px;
+                padding: 5px;
+            }
+
+            .switch-body-element {
+                font-size: 14px;
+            }
+
+            .switch-body::before {
+                top: 5px;
+                left: 5px;
+                bottom: 5px;
+            }
+
+            .alert-danger,
+            .alert-success {
+                font-size: 14px;
+            }
+
+            .reset {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h2 class="form-title" id="form-title">Login</h2>
+    <div class="form-wrapper" id="form-wrapper">
+        <div class="form-body" id="form-body">
+            <form method="POST">
+                <div class="switch-body login-active">
+                    <p class="switch-body-element active" id="login" onclick="toggleMode('login')">Login</p>
+                    <p class="switch-body-element" id="register" onclick="toggleMode('register')">Register</p>
+                </div>
+                {{ form.hidden_tag() }}
+                <div id="extra-fields"></div>
+                {{ form.username(class_='input-field') }}
+                {{ form.password(class_='input-field') }}
+                {{ form.submit(class_='button') }}
+                <input type="hidden" id="mode" name="mode" value="login">
+            </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flashes">
+                {% set category, message = messages[0] %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
+            <p class="reset">Forgot your password? <a style="color: #007bff; cursor: pointer;"
+                    href="{{ url_for('reset_request') }}">Reset</a></p>
+        </div>
+    </div>
+    <script>
+        function toggleMode(mode) {
+            const flashes = document.querySelector('.flashes');
+            if (flashes) {
+                flashes.remove();
+            }
+            const modeInput = document.getElementById('mode');
+            const formTitle = document.getElementById('form-title');
+            const switchElements = document.querySelectorAll('.switch-body-element');
+            const switchBody = document.querySelector('.switch-body');
+            const extraFields = document.getElementById('extra-fields');
+            const formWrapper = document.getElementById('form-wrapper');
+            const formBody = document.getElementById('form-body');
+
+            modeInput.value = mode;
+            formTitle.innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
+
+            switchElements.forEach(element => {
+                element.classList.remove('active');
+            });
+
+            document.getElementById(mode).classList.add('active');
+
+            if (mode === 'login') {
+                switchBody.classList.add('login-active');
+                switchBody.classList.remove('register-active');
+                extraFields.innerHTML = '';
+            } else {
+                switchBody.classList.add('register-active');
+                switchBody.classList.remove('login-active');
+                extraFields.innerHTML = `
+                    {{ form.first_name(class_='input-field') }}
+                    {{ form.last_name(class_='input-field') }}
+                `;
+            }
+
+            // Calculate the new height
+            const formHeight = formBody.scrollHeight;
+            formWrapper.style.height = formHeight + 'px';
+        }
+
+        // Set initial height
+        window.onload = function() {
+            const formWrapper = document.getElementById('form-wrapper');
+            const formBody = document.getElementById('form-body');
+            formWrapper.style.height = formBody.scrollHeight + 'px';
+        }
+    </script>
+</body>
+
+</html>

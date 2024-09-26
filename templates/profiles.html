@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles</title>
+</head>
+<body>
+    <h1>Find Your Match</h1>
+    <form action="{{ url_for('profiles') }}" method="POST">
+        {% if profiles %}
+            {% for profile in profiles %}
+            <div class="profile">
+                <h2>{{ profile.name }}</h2>
+                <p>Images:</p>
+                <p>Age: {{ profile.age }}</p>
+                <p>Year: {{ profile.year }}</p>
+                <p>Description: {{ profile.description }}</p>
+                <p>Faculty: {{ profile.faculty }}</p>
+                <p>Tags: {{ profile.tags }}</p>
+                <ul>
+                    {% if profile.image1 %}
+                    <li><img src="{{ url_for('static', filename=profile.image1.split('/')[-1]) }}" alt="Image 1" width="100"></li>
+                    {% endif %}
+                    {% if profile.image2 %}
+                    <li><img src="{{ url_for('static', filename=profile.image2.split('/')[-1]) }}" alt="Image 2" width="100"></li>
+                    {% endif %}
+                </ul>
+                <button type="submit" name="action" value="like">Like</button>
+                <button type="submit" name="action" value="pass">Pass</button>
+                <input type="hidden" name="profile_id" value="{{ profile.id }}">
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>There's no available accounts at the moment. Please try again later.</p>
+        {% endif %}
+    </form>
+</body>
+</html>

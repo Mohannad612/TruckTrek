@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            width: 100vw;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+            width: 90vw;
+            height: 90vh;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(24, 24, 27);
+            gap: 20px;
+        }
+
+        .dashboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 300px;
+            height: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(17, 17, 19);
+            gap: 20px;
+        }
+
+        .sidebar-button {
+            padding: 10px;
+            width: 100%;
+            border-radius: 10px;
+            background-color: rgb(17, 17, 19);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .sidebar-button:hover {
+            background-color: rgb(39, 39, 42);
+        }
+
+        .sidebar-button.active {
+            background-color: rgb(57, 57, 57);
+        }
+
+        .brand {
+            padding: 10px;
+            color: white;
+            font-size: 30px;
+        }
+
+        .dashboard-main {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(24, 24, 27);
+            gap: 20px;
+        }
+
+        .btn-primary {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgb(0, 112, 240);
+            width: 100%;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px 0 rgba(0, 112, 240, 0.7);
+            font-size: 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: rgb(0, 90, 200);
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-auto-flow: row;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .user {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(17, 17, 19);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .user img {
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .user-name {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: rgb(200, 200, 200);
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-title {
+                font-size: 24px;
+            }
+
+            .dashboard-container {
+                width: 90%;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .btn-primary {
+                padding: 15px;
+                font-size: 18px;
+            }
+
+            .user-name {
+                font-size: 20px;
+            }
+
+            .description {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+    <div class="dashboard-container">
+        <div class="dashboard-sidebar">
+            <div class="brand">
+                <h1 class="dashboard-title">Bondly</h1>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="sidebar-button {% if request.path == '/dashboard' %}active{% endif %}">People</a>
+            <a href="{{ url_for('chat') }}" class="sidebar-button {% if request.path == '/chat' %}active{% endif %}">Chat</a>
+            <a href="{{ url_for('dashboard') }}" class="sidebar-button {% if request.path == '/notifications' %}active{% endif %}">Notifications</a>
+            <a href="{{ url_for('profile') }}" class="sidebar-button {% if request.path == '/profile' or request.path == '/settings/profile'%}active{% endif %}">Profile</a>
+            <a href="{{ url_for('logout') }}" class="sidebar-button">Logout</a>
+        </div>
+        <div class="dashboard-main">
+            <div class="user-list">
+                {% for user in users %}
+                    <div class="user">
+                        <img src="{{ users[user].profile_pic }}" alt="user" class="profile-pic" width="100" height="100">
+                        <div class="user-name">{{ users[user].name }}</div>
+                        <div class="description">{{ users[user].description }}</div>
+                        <a href="{{ url_for('profile', id=users[user].id) }}" class="btn-primary">View Profile</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
