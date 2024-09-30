@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+            width: 90vw;
+            height: 90vh;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(24, 24, 27);
+            gap: 20px;
+        }
+
+        .chat-sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 350px;
+            height: 100%;
+            padding: 20px;
+            padding-left: 0;
+            padding-right: 0;
+            border-radius: 12px;
+            background-color: rgb(17, 17, 19);
+            overflow-y: auto;
+        }
+
+        .chat-messages-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: rgb(17, 17, 19);
+            border-radius: 12px;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-message {
+            max-width: 70%;
+            padding: 10px;
+            margin: 2px 0;
+            border-radius: 10px;
+            word-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .chat-message.sent {
+            background-color: rgb(0, 112, 240);
+            border-radius: 15px;
+            color: white;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .chat-message.sent.last {
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-message.received {
+            background-color: rgb(39, 39, 42);
+            color: white;
+            border-radius: 15px;
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        .chat-message.received.last {
+            border-bottom-left-radius: 0;
+        }
+
+        .chat-input {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            padding: 20px;
+            background-color: rgb(17, 17, 19);
+            border-top: 1px solid rgb(39, 39, 42);
+            display: none;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            background-color: rgb(39, 39, 42);
+            color: white;
+            outline: none;
+        }
+
+        .chat-input button {
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgb(0, 112, 240);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .user-list button {
+            display: flex;
+            flex-direction: column;
+            /* justify-content: space-between; */
+            /* align-items: center; */
+            padding: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            background-color: rgb(17, 17, 19);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            text-align: left;
+            gap: 10px;
+        }
+
+        .user-list button:hover {
+            background-color: rgb(39, 39, 42);
+        }
+
+        .user-list button.active {
+            background-color: rgb(57, 57, 57);
+        }
+
+        .unread {
+            font-weight: bold;
+        }
+
+        .username {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 150px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: gray;
+        }
+
+        .no-chat-selected {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .dashboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 300px;
+            height: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgb(17, 17, 19);
+            gap: 20px;
+        }
+
+        .brand {
+            padding: 10px;
+            color: white;
+            font-size: 30px;
+        }
+
+        .sidebar-button {
+            padding: 10px;
+            width: 100%;
+            border-radius: 10px;
+            background-color: rgb(17, 17, 19);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .sidebar-button:hover {
+            background-color: rgb(39, 39, 42);
+        }
+
+        .sidebar-button.active {
+            background-color: rgb(57, 57, 57);
+        }
+
+        .user-top {
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .user-top img {
+            border-radius: 50%;
+        }
+
+        .user-top-contents {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            gap: 5px;
+        }
+
+        .user-contents {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="chat-page">
+    <div class="chat-container">
+        <div class="dashboard-sidebar">
+            <div class="brand">
+                <h1 class="dashboard-title">Bondly</h1>
+            </div>
+            <a href="{{ url_for('home') }}"
+                class="sidebar-button {% if request.path == '/home' %}active{% endif %}">Home</a>
+            <a href="{{ url_for('chat') }}"
+                class="sidebar-button {% if request.path == '/chat' %}active{% endif %}">Chat</a>
+            <a href="{{ url_for('profile') }}" class="sidebar-button {% if request.path == '/profile' or request.path == '/settings/profile'%}active{% endif %}">Profile</a>
+            <a href="{{ url_for('logout') }}" class="sidebar-button">Logout</a>
+        </div>
+        <div class="chat-sidebar">
+            <h1 style="padding-left: 20px;">Chat</h1>
+            <div class="user-list" id="userList">
+                {% for user_id, user in users.items() %}
+                <button id="user-{{ user.username }}" class="{{ 'unread' if not user.read else '' }}"
+                    onclick="selectUser('{{ user.username }}', '{{ user_id }}')">
+                    <div class="user-top {{ 'unread' if not user.read else '' }}">
+                        <div class="user-contents">
+                            <div class="user-top-contents">
+                                <span class="username {{ 'unread' if not user.read else '' }}">{{ user.name }}</span>
+                                <span class="timestamp {{ 'unread' if not user.read else '' }}"
+                                    data-timestamp="{{ user.orig_timestamp if user.orig_timestamp else '' }}"></span>
+                            </div>
+                            <small>{{'Me:' if user.me else ''}} {{ user.latest_message if user.latest_message else ''
+                                }}</small>
+                        </div>
+                    </div>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="chat-messages-container" id="chatContainer">
+            <div class="no-chat-selected" id="noChatSelected">No chat selected. Please select a conversation.</div>
+            <div class="chat-messages" id="messages"></div>
+            <div class="chat-input" id="chatInput">
+                <input type="text" id="messageInput" placeholder="Type a message..."
+                    onkeydown="if (event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        let socket;
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const chatContainer = document.getElementById('chatContainer');
+        const noChatSelected = document.getElementById('noChatSelected');
+        const chatInput = document.getElementById('chatInput');
+        const userList = document.getElementById('userList');
+        let selectedUser = null;
+        let selectedUserId = null;
+        let replyToId = null;
+        let socketToken;
+
+        fetch('/generate_socket_token')
+            .then(response => response.json())
+            .then(data => {
+                socketToken = data.socket_token;
+                socket = io.connect('', {
+                    query: { token: socketToken }
+                });
+
+                socket.on('connect', () => {
+                    console.log('Connected to socket with token:', socketToken);
+                });
+
+                socket.on('disconnect', () => {
+                    console.log('Disconnected from socket');
+                });
+
+                socket.on('message', function (data) {
+                    if (data.recipient === '{{ username }}' || data.username === '{{ username }}') {
+                        if (selectedUser == data.recipient || selectedUser == data.username) {
+                            const messageElement = document.createElement('div');
+                            messageElement.textContent = `${data.message}`;
+                            messageElement.dataset.messageId = data.message_id;
+                            messageElement.classList.add('chat-message');
+                            messageElement.classList.add(data.username === '{{ username }}' ? 'sent' : 'received');
+                            messageElement.onclick = function () {
+                                replyToId = data.message_id;
+                                messageInput.placeholder = `Replying to message ${data.message_id}`;
+                            };
+                            messages.appendChild(messageElement);
+                            messages.scrollTop = messages.scrollHeight;
+
+                            const isRecieved = data.username !== '{{ username }}';
+                            const lastMessage = messages.querySelectorAll('.chat-message')[messages.querySelectorAll('.chat-message').length - 2];
+                            if (lastMessage && lastMessage.classList.contains(isRecieved ? 'received' : 'sent')) {
+                                lastMessage.classList.remove('last');
+                            }
+                            messageElement.classList.add('last');
+                        }
+
+                        updateUserList(data.username, data.message, data.timestamp, data.recipient === '{{ username }}');
+                    }
+                });
+            });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const timestamps = document.querySelectorAll('.timestamp');
+            timestamps.forEach(timestamp => {
+                const rawTimestamp = timestamp.getAttribute('data-timestamp');
+                if (rawTimestamp) {
+                    timestamp.textContent = formatTimestamp(rawTimestamp);
+                }
+            });
+        });
+
+        function selectUser(username, userId) {
+            selectedUser = username;
+            selectedUserId = userId;
+            loadMessages(username);
+            noChatSelected.style.display = 'none';
+            messages.style.display = 'flex';
+            chatInput.style.display = 'flex';
+            const element = document.getElementById(`user-${username}`);
+            const buttons = Array.from(userList.querySelectorAll('button'));
+            buttons.forEach(button => button.classList.remove('active'));
+            element.classList.remove('unread');
+            element.classList.add('active');
+        }
+
+        function loadMessages(username) {
+            messages.innerHTML = '';
+            fetch(`/messages/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.messages.forEach((message, index) => {
+                        const messageElement = document.createElement('div');
+                        messageElement.textContent = `${message.content}`;
+                        messageElement.dataset.messageId = message.id;
+                        messageElement.classList.add('chat-message');
+                        messageElement.classList.add(message.username === '{{ username }}' ? 'sent' : 'received');
+                        messageElement.onclick = function () {
+                            replyToId = message.id;
+                            messageInput.placeholder = `Replying to message ${message.id}`;
+                        };
+                        if (index === data.messages.length - 1 || data.messages[index + 1].username !== message.username) {
+                            messageElement.classList.add('last');
+                        }
+                        messages.appendChild(messageElement);
+                    });
+                    messages.scrollTop = messages.scrollHeight;
+                });
+        }
+
+        function sendMessage() {
+            if (selectedUser) {
+                const message = messageInput.value;
+                if (!message) return;
+                socket.emit('message', {
+                    username: '{{ username }}',
+                    message: message,
+                    recipient: selectedUser,
+                    recipient_id: selectedUserId,
+                    reply_to_id: replyToId
+                });
+                messageInput.value = '';
+                messageInput.placeholder = 'Type a message...';
+                replyToId = null;
+            } else {
+                alert('Please select a user to chat with.');
+            }
+        }
+
+        function updateUserList(username, message, timestamp, isRecipient) {
+            const userId = isRecipient ? username : selectedUser;
+            let userButton = document.getElementById(`user-${userId}`);
+            const formattedTimestamp = formatTimestamp(timestamp);
+            if (userButton) {
+                userButton.querySelector('small').textContent = isRecipient ? message : `Me: ${message}`;
+                userButton.querySelector('.timestamp').setAttribute('data-timestamp', timestamp);
+                userButton.querySelector('.timestamp').textContent = formattedTimestamp;
+                if (isRecipient) {
+                    userButton.classList.add('unread');
+                } else {
+                    userButton.classList.remove('unread');
+                }
+            } else {
+                userButton = document.createElement('button');
+                userButton.id = `user-${userId}`;
+                userButton.onclick = function () {
+                    selectUser(username, userId);
+                };
+
+                userButton.innerHTML = `
+                    <div class="user-top ${isRecipient ? 'unread' : ''}">
+                        <div class="user-contents">
+                            <div class="user-top-contents">
+                                <span class="username ${isRecipient ? 'unread' : ''}">${username}</span>
+                                <span class="timestamp ${isRecipient ? 'unread' : ''}" data-timestamp="${timestamp}">${formattedTimestamp}</span>
+                            </div>
+                            <small>${isRecipient ? '' : 'Me: '}${message}</small>
+                        </div>
+                    </div>
+                `;
+                if (isRecipient) {
+                    userButton.classList.add('unread');
+                }
+                userList.appendChild(userButton);
+            }
+
+            const buttons = Array.from(userList.querySelectorAll('button'));
+
+            buttons.sort((a, b) => {
+                const aTimestamp = new Date(a.querySelector('.timestamp').getAttribute('data-timestamp'));
+                const bTimestamp = new Date(b.querySelector('.timestamp').getAttribute('data-timestamp'));
+
+                if (isNaN(aTimestamp)) return 1;
+                if (isNaN(bTimestamp)) return -1;
+
+                return bTimestamp - aTimestamp;
+            });
+
+            buttons.forEach(button => userList.appendChild(button));
+        }
+
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const isToday = date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+            if (isToday) {
+                return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+            } else {
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+        }
+    </script>
+</body>
+
+</html>
