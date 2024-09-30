@@ -7,14 +7,14 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-/* General body styling for all pages */
+
 body {
-    background: linear-gradient(to right, #333, #666);
+    background: black;
     color: #f5f5f5;
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Login page styling */
+
 body.login-page {
     display: flex;
     justify-content: center;
@@ -38,74 +38,20 @@ h1 {
     margin-bottom: 24px;
     color: #f5f5f5;
 }
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: #ccc;
-}
-
-.form-group input {
-    background-color: #333;
-    border: 1px solid #444;
-    padding: 14px;
-    font-size: 14px;
-    border-radius: 8px;
-    width: 100%;
-    outline: none;
-    color: #f5f5f5;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: #f5f5f5;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-}
-
-.form-group button {
-    background-color: #007bff;
-    color: #fff;
-    font-size: 15px;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.form-group button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-a {
+/* a {
     display: block;
     margin-top: 10px;
     font-size: 14px;
     color: #ddd;
     text-decoration: none;
     transition: color 0.3s ease;
-}
+} */
 
-a:hover {
+/* a:hover {
     color: #fff;
-}
+} */
 
-/* Home page styling */
+
 body.home-page {
     display: flex;
     flex-direction: column;
@@ -131,7 +77,7 @@ h1 {
     color: #f5f5f5;
 }
 
-a {
+/* a {
     background-color: #007bff;
     color: #fff;
     font-size: 18px;
@@ -150,4 +96,4 @@ a:hover {
 
 a:active {
     background-color: #004494;
-}
+} */
