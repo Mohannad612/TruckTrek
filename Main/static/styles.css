@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* Universal styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Body styles */
+body {
+    background-color: black;
+    color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Container styles */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Header styles */
+.header {
+    background-color: #1e1e1e;
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #f5f5f5;
+}
+
+/* Main buttons styles */
+.main-buttons {
+    display: flex;
+    justify-content: center;
+    background-color: #1e1e1e;
+    padding: 10px 0;
+}
+
+.main-buttons .btn {
+    color: #f5f5f5;
+    background-color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 0 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+}
+
+.main-buttons .btn:hover {
+    background-color: #444;
+    color: #f5f5f5;
+}
+
+/* Content styles */
+.content {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    background-color: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+.content h2 {
+    color: #f5f5f5;
+    margin-bottom: 20px;
+}
+
+.content p {
+    color: #ccc;
+}
+
+/* Profile and likes sections */
+.profile-cards, .likes-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.profile-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.profile-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #333;
+}
+
+.profile-card p {
+    padding: 10px;
+    color: #f5f5f5;
+}
+
+.likes-section {
+    margin: 20px;
+}
